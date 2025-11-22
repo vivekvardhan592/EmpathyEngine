@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Empathy Engine Visualization</title>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>Empathy Engine Visualization</h1>
+
+  <!-- Input -->
+  <textarea id="inputBox" placeholder="Enter each message on a new line"></textarea>
+  <button id="analyzeBtn">Analyze</button>
+
+  <!-- Hidden Sections -->
+  <h2 class="hidden">Emotion Summary</h2>
+  <div id="tags" class="hidden"></div>
+
+  <!-- <h2 class="hidden">Emotional Trend</h2>
+  <div id="trendBox" class="hidden"></div> -->
+
+  <h2 class="hidden">Message-by-Message Breakdown</h2>
+  <div id="breakdown" class="hidden"></div>
+  <h2 class="hidden">Emotional Trend</h2>
+  <div id="trendBox" class="hidden"></div>
+  <h2 class="hidden">Emotion Timeline (Line Graph)</h2>
+  <div style="height: 300px;" class="hidden">
+    <canvas id="timelineChart"></canvas>
+  </div>
+
+  <h2 class="hidden">Emotion Distribution (Pie Chart)</h2>
+  <div style="height: 450px;" class="hidden">
+    <canvas id="pieChart"></canvas>
+  </div>
+
+  <h2 class="hidden">Emotion Distribution (Bar Chart)</h2>
+  <div style="height: 280px;" class="hidden">
+    <canvas id="barChart"></canvas>
+  </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
