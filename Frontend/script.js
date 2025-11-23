@@ -11,6 +11,10 @@ async function analyzeChat(messages) {
     body: JSON.stringify({ messages })
   });
 
+  if (!response.ok) {
+    throw new Error("Backend error: " + response.status);
+  }
+
   return await response.json();
 }
 
@@ -19,14 +23,23 @@ document.getElementById("analyzeBtn").addEventListener("click", async () => {
   const rawText = document.getElementById("inputBox").value;
   const messages = rawText.split("\n").filter(m => m.trim() !== "");
 
-  const result = await analyzeChat(messages);
+  let result;
+  try {
+    result = await analyzeChat(messages);
+  } catch (err) {
+    alert("Error connecting to backend: " + err.message);
+    return;
+  }
 
-  // Show sections after click
+  // Show sections
   showSections();
 
   document.getElementById("tags").innerHTML = "";
   document.getElementById("breakdown").innerHTML = "";
   document.getElementById("trendBox").innerHTML = "";
+  document.getElementById("timelineChart").getContext("2d").clearRect(0, 0, 400, 400);
+  document.getElementById("pieChart").getContext("2d").clearRect(0, 0, 400, 400);
+  document.getElementById("barChart").getContext("2d").clearRect(0, 0, 400, 400);
 
   // Emotion Colors
   const emotionColors = {
@@ -39,35 +52,35 @@ document.getElementById("analyzeBtn").addEventListener("click", async () => {
     love: "#FF1493", nervousness: "#E9967A", optimism: "#00FA9A",
     pride: "#4682B4", realization: "#7B68EE", relief: "#87CEEB",
     remorse: "#8B4513", sadness: "#1E90FF", surprise: "#00CED1",
-    neutral: "#604b61ff"
+    neutral: "#604b61ff", uncertain: "#999999"
   };
 
-  // Trend text
+  // Trend Text
   document.getElementById("trendBox").innerHTML = result.emotional_trend;
 
-  // Summary tags
+  // Summary Tags
   const distribution = result.emotion_distribution;
   Object.keys(distribution).forEach(emotion => {
     const tag = document.createElement("span");
     const color = emotionColors[emotion] || "#888";
+
     tag.className = "tag";
     tag.style.borderColor = color;
     tag.style.color = color;
     tag.textContent = `${emotion} (${distribution[emotion]})`;
+
     document.getElementById("tags").appendChild(tag);
   });
 
-  // Breakdown
+  // Breakdown list
   result.timeline.forEach((item, index) => {
     const div = document.createElement("div");
     div.className = "msgItem";
-
     const color = emotionColors[item.emotion] || "#888";
 
     div.innerHTML = `
       <b>${index + 1}. "${item.text}"</b><br>
-      Emotion: 
-      <span class="emotionLabel" style="background:${color}">${item.emotion}</span>
+      Emotion: <span class="emotionLabel" style="background:${color}">${item.emotion}</span>
     `;
 
     document.getElementById("breakdown").appendChild(div);
@@ -104,9 +117,7 @@ document.getElementById("analyzeBtn").addEventListener("click", async () => {
         backgroundColor: Object.keys(distribution).map(e => emotionColors[e])
       }]
     },
-    options: {
-      responsive: true
-    }
+    options: { responsive: true }
   });
 
   // Bar Chart
@@ -123,10 +134,7 @@ document.getElementById("analyzeBtn").addEventListener("click", async () => {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      scales: {
-        y: { beginAtZero: true }
-      }
+      scales: { y: { beginAtZero: true } }
     }
   });
-
 });
