@@ -5,7 +5,7 @@ function showSections() {
 }
 
 async function analyzeChat(messages) {
-  const response = await fetch("http://127.0.0.1:8000/analyze-chat", {
+  const response = await fetch("https://EmpathyEngine-vivekvardhan592.hf.space/analyze-chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ messages })
