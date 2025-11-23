@@ -1,0 +1,3 @@
+[build]
+  # The Frontend directory contains static files, no build needed
+  publish = "Frontend"
